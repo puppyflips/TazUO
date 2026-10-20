@@ -796,6 +796,7 @@ namespace ClassicUO.Game.Scenes
             _renderListAnimations.Clear();
             _renderListEffects.Clear();
             _renderListTransparentObjects.Clear();
+            _hidden3D.Clear();
 
             // Recycle this frame's column buckets to the pool so the map rebuilds without allocating.
             foreach (List<LightOccluder> bucket in _lightOccluders.Values)
@@ -1162,6 +1163,7 @@ namespace ClassicUO.Game.Scenes
 
                 if (_world.InGame && dir != Direction.NONE)
                 {
+                    dir = (Direction)Uo3d.WorldRotation.ToWorldDirection((int)dir);
                     StopFollowing();
 
                     if (!_world.Player.Pathfinder.AutoWalking)
@@ -1516,6 +1518,7 @@ namespace ClassicUO.Game.Scenes
 
         private void DrawWorld(UltimaBatcher2D batcher, ref Matrix matrix)
         {
+            UpdateWorld3DState();
             Profiler.EnterContext("WorldSelection");
             FillGameObjectList();
             Profiler.ExitContext("WorldSelection");
@@ -1524,6 +1527,15 @@ namespace ClassicUO.Game.Scenes
             RenderTargetBinding[] previousRenderTargets = batcher.GraphicsDevice.GetRenderTargets();
             batcher.GraphicsDevice.SetRenderTarget(_worldRenderTarget);
             batcher.GraphicsDevice.Clear(ClearOptions.Target, Color.Black, 1f, 0);
+
+            if (DrawWorld3D(batcher, ref matrix))
+            {
+                if (previousRenderTargets != null && previousRenderTargets.Length > 0)
+                    batcher.GraphicsDevice.SetRenderTargets(previousRenderTargets);
+                else
+                    batcher.GraphicsDevice.SetRenderTarget(null);
+                return;
+            }
 
             batcher.SetSampler(SamplerState.PointClamp);
 
@@ -1587,6 +1599,7 @@ namespace ClassicUO.Game.Scenes
             batcher.ResetProjectionDepthRange();
 
             batcher.End();
+            DrawCompass(batcher.GraphicsDevice);
 
             // Restore previous render target
             if (previousRenderTargets != null && previousRenderTargets.Length > 0)

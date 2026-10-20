@@ -59,8 +59,8 @@ namespace ClassicUO.Game.GameObjects
             FrameInfo.Height = 0;
 
             posY -= 3;
-            int drawX = posX + (int)Offset.X + 22;
-            int drawY = posY + (int)(Offset.Y - Offset.Z) + 22;
+            int drawX = posX + (int)Uo3d.WorldRotation.OffX(Offset) + 22;
+            int drawY = posY + (int)(Uo3d.WorldRotation.OffY(Offset) - Offset.Z) + 22;
 
             // Cache boolean values
             bool isDead = IsDead;
@@ -149,6 +149,7 @@ namespace ClassicUO.Game.GameObjects
             }
 
             ProcessSteps(out byte dir);
+            dir = Uo3d.WorldRotation.ToScreenDirection(dir);
             byte layerDir = dir;
 
             Client.Game.UO.Animations.GetAnimDirection(ref dir, ref IsFlipped);
@@ -274,12 +275,14 @@ namespace ClassicUO.Game.GameObjects
 
                     ProcessSteps(out dir);
 
+                    // the seat picks the facing on the map, which is then shown turned with the view
                     Client.Game.UO.FileManager.Animations.FixSittingDirection(
                         ref dir,
                         ref IsFlipped,
                         ref drawX,
                         ref drawY,
-                        ref seatData
+                        ref seatData,
+                        Uo3d.WorldRotation.ScreenEighths
                     );
 
                     drawY += SIT_OFFSET_Y;
@@ -1113,8 +1116,8 @@ namespace ClassicUO.Game.GameObjects
         {
             Point position = RealScreenPosition;
             position.Y -= 3;
-            position.X += (int)Offset.X + 22;
-            position.Y += (int)(Offset.Y - Offset.Z) + 22;
+            position.X += (int)Uo3d.WorldRotation.OffX(Offset) + 22;
+            position.Y += (int)(Uo3d.WorldRotation.OffY(Offset) - Offset.Z) + 22;
 
             Rectangle r = FrameInfo;
             r.X = position.X - r.X;
@@ -1133,6 +1136,7 @@ namespace ClassicUO.Game.GameObjects
             Renderer.Animations.Animations animations = Client.Game.UO.Animations;
 
             ProcessSteps(out byte dir);
+            dir = Uo3d.WorldRotation.ToScreenDirection(dir);
             byte layerDir = dir;
             bool isFlipped = IsFlipped;
             animations.GetAnimDirection(ref dir, ref isFlipped);

@@ -240,6 +240,12 @@ public static class MiscTab
                 new Accessor<bool>(() => profile.DisableAutoMove),
                 search: new SearchMetadata(TazLang.Get("mog_misctab_experimental_disablerightleftclickautomove"),
                     Keywords: [TazLang.Get("mog_kw_automove"), TazLang.Get("mog_kw_click")])
+            ),
+            Option.Checkbox(
+                TazLang.Get("mog_misctab_experimental_rotatable3dview"),
+                new Accessor<bool>(() => profile.Enable3DRotation),
+                search: new SearchMetadata(TazLang.Get("mog_misctab_experimental_rotatable3dview"),
+                    Keywords: [TazLang.Get("mog_kw_rotate"), TazLang.Get("mog_kw_3d")])
             )
         ).WithSearch(new SearchMetadata(TazLang.Get("mog_misctab_experimental_label"),
             Keywords: [TazLang.Get("mog_kw_experimental"), TazLang.Get("mog_kw_beta"), TazLang.Get("mog_kw_test")], Tags: [TazLang.Get("mog_kw_experimental")]));

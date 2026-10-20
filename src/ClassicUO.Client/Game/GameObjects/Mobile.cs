@@ -1149,8 +1149,8 @@ namespace ClassicUO.Game.GameObjects
             int targetAnimOffset = height + centerY + 8;
             int smoothedAnimOffset = SmoothTextAnimOffset(targetAnimOffset);
 
-            p.X += (int)Offset.X + 22;
-            p.Y += (int)(Offset.Y - Offset.Z - smoothedAnimOffset);
+            p.X += (int)Uo3d.WorldRotation.OffX(Offset) + 22;
+            p.Y += (int)(Uo3d.WorldRotation.OffY(Offset) - Offset.Z - smoothedAnimOffset);
             // Removed Camera.WorldToScreen() - text is now transformed by worldRTMatrix during rendering
 
             if (ObjectHandlesStatus == ObjectHandlesStatus.DISPLAYING)

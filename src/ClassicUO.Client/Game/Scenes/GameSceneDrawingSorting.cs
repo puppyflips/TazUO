@@ -793,6 +793,7 @@ namespace ClassicUO.Game.Scenes
         {
             if (obj.AlphaHue == 0)
             {
+                RecordHidden3D(obj);
                 return;
             }
 
@@ -803,12 +804,12 @@ namespace ClassicUO.Game.Scenes
                 && allowSelection
                 && obj.Z <= _maxGroundZ
                 && obj.AllowedToDraw
-                && obj.CheckMouseSelection()
+                && CheckMouseSelection3D(obj)
             )
             {
                 if (SelectedObject.Object is GameObject prev)
                 {
-                    if (obj.CalculateDepthZ() >= prev.CalculateDepthZ())
+                    if (PickDepth(obj) >= PickDepth(prev))
                     {
                         SelectedObject.Object = obj;
                     }
@@ -1059,7 +1060,7 @@ namespace ClassicUO.Game.Scenes
                             }
 
                             if (
-                                !ProcessAlpha(
+                                !ProcessAlpha3D(
                                     obj,
                                     ref itemData,
                                     true,
@@ -1150,7 +1151,7 @@ namespace ClassicUO.Game.Scenes
                             }
 
                             if (
-                                !ProcessAlpha(
+                                !ProcessAlpha3D(
                                     obj,
                                     ref itemData,
                                     true,
@@ -1245,7 +1246,7 @@ namespace ClassicUO.Game.Scenes
                             StaticTiles empty = default;
 
                             if (
-                                !ProcessAlpha(
+                                !ProcessAlpha3D(
                                     obj,
                                     ref empty,
                                     false,
@@ -1303,7 +1304,7 @@ namespace ClassicUO.Game.Scenes
                             }
 
                             if (
-                                !ProcessAlpha(
+                                !ProcessAlpha3D(
                                     obj,
                                     ref itemData,
                                     false,
@@ -1394,7 +1395,7 @@ namespace ClassicUO.Game.Scenes
 
                     case GameEffect effect:
                         if (
-                                            !ProcessAlpha(
+                                            !ProcessAlpha3D(
                                                 obj,
                                                 ref Client.Game.UO.FileManager.TileData.StaticData[effect.Graphic],
                                                 false,

@@ -1,4 +1,5 @@
 using ClassicUO.Configuration;
+using SDL3;
 
 namespace ClassicUO.Game.Managers.Hotkeys
 {
@@ -47,6 +48,15 @@ namespace ClassicUO.Game.Managers.Hotkeys
         public const string ShowNameplatesId = "world.shownameplates";
         #endregion
 
+        #region 3D view
+        public const string World3DTurnClockwiseId = "world3d.turnclockwise";
+        public const string World3DTurnCounterClockwiseId = "world3d.turncounterclockwise";
+        public const string World3DSpinClockwiseId = "world3d.spinclockwise";
+        public const string World3DSpinCounterClockwiseId = "world3d.spincounterclockwise";
+        public const string World3DHoldClockwiseId = "world3d.holdclockwise";
+        public const string World3DHoldCounterClockwiseId = "world3d.holdcounterclockwise";
+        #endregion
+
         /// <summary>Register all systems' hotkeys. Safe to call again on profile switch.</summary>
         public static void RegisterAll()
         {
@@ -56,6 +66,27 @@ namespace ClassicUO.Game.Managers.Hotkeys
             RegisterWorldMap();
             RegisterGumps();
             RegisterChat();
+            RegisterWorld3D();
+        }
+
+        private static void RegisterWorld3D()
+        {
+            // only while the experimental option is on (Options > Misc > Experimental)
+            const string category = "3D View";
+            const SDL.SDL_Keymod ctrlShift = SDL.SDL_Keymod.SDL_KMOD_CTRL | SDL.SDL_Keymod.SDL_KMOD_SHIFT;
+            HotKeys.Register(World3DTurnClockwiseId, "Turn the world clockwise",
+                new HotkeyBinding(SDL.SDL_Keycode.SDLK_E, ctrlShift), category, () => Uo3d.WorldRotation.TurnBy(1));
+            HotKeys.Register(World3DTurnCounterClockwiseId, "Turn the world counter-clockwise",
+                new HotkeyBinding(SDL.SDL_Keycode.SDLK_Q, ctrlShift), category, () => Uo3d.WorldRotation.TurnBy(-1));
+            // a full turn round, back to the view it started from; unbound by default
+            HotKeys.Register(World3DSpinClockwiseId, "Turn the world once round clockwise",
+                new HotkeyBinding(), category, () => Uo3d.WorldRotation.TurnBy(4));
+            HotKeys.Register(World3DSpinCounterClockwiseId, "Turn the world once round counter-clockwise",
+                new HotkeyBinding(), category, () => Uo3d.WorldRotation.TurnBy(-4));
+            // held down: the world turns freely and settles on the next quarter view when let go;
+            // polled every frame by the game scene, unbound by default
+            HotKeys.Register(World3DHoldClockwiseId, "Turn the world clockwise while held", new HotkeyBinding(), category);
+            HotKeys.Register(World3DHoldCounterClockwiseId, "Turn the world counter-clockwise while held", new HotkeyBinding(), category);
         }
 
         private static void RegisterChat()

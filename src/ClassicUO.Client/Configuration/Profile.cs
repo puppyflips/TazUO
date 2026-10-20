@@ -327,6 +327,7 @@ namespace ClassicUO.Configuration
         public bool DisableArrowBtn { get; set => SetProperty(ref field, value); }
         public bool DisableTabBtn { get; set => SetProperty(ref field, value); }
         public bool DisableCtrlQWBtn { get; set => SetProperty(ref field, value); }
+        public bool Enable3DRotation { get; set => SetProperty(ref field, value); }
         public bool DisableAutoMove { get; set => SetProperty(ref field, value); }
         public bool EnableDragSelect { get; set => SetProperty(ref field, value); }
         public int DragSelectModifierKey { get; set => SetProperty(ref field, value); } // 0 = none, 1 = control, 2 = shift, 3 = alt

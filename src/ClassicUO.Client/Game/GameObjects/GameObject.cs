@@ -158,8 +158,8 @@ namespace ClassicUO.Game.GameObjects
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Vector2 GetScreenPosition() => new Vector2(
-                RealScreenPosition.X + Offset.X,
-                RealScreenPosition.Y + (Offset.Y - Offset.Z)
+                RealScreenPosition.X + Uo3d.WorldRotation.OffX(Offset),
+                RealScreenPosition.Y + (Uo3d.WorldRotation.OffY(Offset) - Offset.Z)
             );
 
         public int DistanceFrom(Vector2 pos) => Math.Max(Math.Abs(X - (int)pos.X), Math.Abs(Y - (int)pos.Y));
@@ -207,6 +207,13 @@ namespace ClassicUO.Game.GameObjects
         {
             RealScreenPosition.X = ((X - Y) * 22) - offsetX - 22;
             RealScreenPosition.Y = ((X + Y) * 22 - (Z << 2)) - offsetY - 22;
+            if (Uo3d.WorldRotation.Turned)
+            {
+                // turned 3D view: overheads, health bars and picking follow the object
+                Uo3d.WorldRotation.ScreenDelta(X + 0.5f, Y + 0.5f, out int dx, out int dy);
+                RealScreenPosition.X += dx;
+                RealScreenPosition.Y += dy;
+            }
             IsPositionChanged = false;
 
             UpdateTextCoordsV();
@@ -257,8 +264,8 @@ namespace ClassicUO.Game.GameObjects
 
             p.Y -= bounds.Height >> 1;
 
-            p.X += (int)Offset.X + 22;
-            p.Y += (int)(Offset.Y - Offset.Z) + 44;
+            p.X += (int)Uo3d.WorldRotation.OffX(Offset) + 22;
+            p.Y += (int)(Uo3d.WorldRotation.OffY(Offset) - Offset.Z) + 44;
 
             // Removed Camera.WorldToScreen() - text is now transformed by worldRTMatrix during rendering
 

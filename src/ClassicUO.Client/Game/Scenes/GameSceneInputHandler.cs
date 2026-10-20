@@ -55,8 +55,8 @@ namespace ClassicUO.Game.Scenes
                 int x = Camera.Bounds.X + (Camera.Bounds.Width >> 1) + ((ProfileManager.CurrentProfile.PlayerOffset.X - ProfileManager.CurrentProfile.PlayerOffset.Y) * 22);
                 int y = Camera.Bounds.Y + (Camera.Bounds.Height >> 1) + ((ProfileManager.CurrentProfile.PlayerOffset.X + ProfileManager.CurrentProfile.PlayerOffset.Y) * 22);
 
-                var direction = (Direction)
-                    GameCursor.GetMouseDirection(x, y, Mouse.Position.X, Mouse.Position.Y, 1);
+                var direction = (Direction)Uo3d.WorldRotation.ToWorldDirection(
+                    GameCursor.GetMouseDirection(x, y, Mouse.Position.X, Mouse.Position.Y, 1));
 
                 double mouseRange = MathHelper.Hypotenuse(
                     x - Mouse.Position.X,

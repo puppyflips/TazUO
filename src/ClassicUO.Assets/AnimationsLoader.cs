@@ -1080,7 +1080,8 @@ namespace ClassicUO.Assets
             ref bool mirror,
             ref int x,
             ref int y,
-            ref SittingInfoData data
+            ref SittingInfoData data,
+            int turnEighths = 0
         )
         {
             switch (direction)
@@ -1173,6 +1174,9 @@ namespace ClassicUO.Assets
                         break;
                     }
             }
+
+            // a turned view: the seat picked its facing on the map; show that facing turned
+            direction = (byte)((direction + turnEighths) % 8);
 
             GetSittingAnimDirection(ref direction, ref mirror, ref x, ref y);
 
